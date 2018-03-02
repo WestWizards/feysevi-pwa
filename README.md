@@ -7,10 +7,10 @@ Avec FèySèvi c'est très simple.
 
 # Progressive Web App
 ## Front-end
-### Technologies utilisées
+1. Technologies utilisées
 
 ## Back-end
-### Technologies utilisées
+1. Technologies utilisées
 
-# Team WestWizards
+# Team WestWizards
 
