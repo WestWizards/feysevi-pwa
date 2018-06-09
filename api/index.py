@@ -2,11 +2,13 @@
 import json,jwt
 from flask import *
 from flask_restful import *
+from pymongo import *
 from jsonschema import validate, ValidationError, SchemaError
 
 
 app = Flask(__name__)
 api = Api(app)
+client = MongoClient('mongodb://heroku_stmmjgzt:a8k35bm8jgkbvlloh6g559jkhr@ds239439.mlab.com:39439/heroku_stmmjgzt')
 app.secret_key = 'secret7patate@chevalier!kingsman21'
 SECRET_KEY = app.secret_key
 
@@ -22,11 +24,12 @@ def init_schemas():
     with open('./schemas/schema_token.json', encoding='utf-8') as data_file:
         schemas['token'] = json.load(data_file)
 
-def validate_token(payload,schema):
+
+def validate_request(payload,schema):
     try:
         validate(payload,schemas[schema])
     except ValidationError:
-        return ValidationError.context
+        return 'Fail to pass validating schema.'
 
     if schema == 'token':
         token = get_auth_token(payload)
@@ -36,7 +39,9 @@ def validate_token(payload,schema):
         pass
 
     if schema == 'signup':
-        pass
+        # TODO : send_signup(payload) -> Mongo DB.
+        return 'inscription validé.'
+
 
 
 def get_auth_token(payload):
@@ -49,15 +54,23 @@ class Home(Resource):
     def get(self):
         return {'home':'feysevi zanmi !'}
 
-class Token(Resource):
+class User_Signup(Resource):
     def post(self):
-        payload = {'email':request.form['email'],'password':request.form['password']}
-        access = validate_token(payload,'token')
-        return { 'access':access}
+        payload = {'email',request.form['email'],
+                   'civilite', request.form['civilite'],
+                   'prenom', request.form['prenom'],
+                   'nom', request.form['nom'],
+                   'addresse', request.form['addresse'],
+                   'code_postal', request.form['code_postal'],
+                   'ville', request.form['ville'],
+                   'telephone', request.form['telephone']}
+
+        validate = validate_request(payload,'signup')
+        return {'state':validate}
 
 
 api.add_resource(Home,'/')
-api.add_resource(Token,'/token')
+api.add_resource(User_Signup,'/signup')
 
 if __name__ == "__main__":
     init_schemas()

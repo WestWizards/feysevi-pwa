@@ -1,8 +1,15 @@
 {
   "type":"object",
   "properties": {
-    "email": { "type": "string"},
-    "password": { "type": "string"}
+    "email": { "type": "string", "format": "email" },
+    "civilite": {"type": "string"},
+    "prenom": {"type": "string"},
+    "nom": {"type": "string"},
+    "addresse": {"type": "string"},
+    "code_postal": {"type": "string"},
+    "ville": {"type": "string"},
+    "telephone": {"type": "string"},
+    "remember": {"type": "boolean"}
   },
-  "required":["email","password"]
+  "required":["email"]
 }
